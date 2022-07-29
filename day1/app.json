@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "day02",
-    "slug": "day02",
+    "name": "day1",
+    "slug": "day1",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
