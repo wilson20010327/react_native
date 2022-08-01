@@ -1,37 +1,30 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native"; //before using the components make sure to import them
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  ScrollView,
+} from "react-native"; //before using the components make sure to import them
 
 export default function App() {
   return (
     <View style={styles.container}>
-      {/* 
-    use View to fill the screen with StyleSheet.flex 
-    only one component can be return, simply will use a View to pack all the components
-    */}
       <View style={styles.black}>
-        {/* 
-          Get half of the screen because in the same level sum of the flex=2 and this view get 1 
-          */}
         <View style={styles.container_black}>
-          {/* 
-            change the flex direction and the order of the blocks will become different, in default is column
-            */}
-          <View style={styles.pink}></View>
-          <View style={styles.black}></View>
-        </View>
-      </View>
-
-      {/* half of the screen*/}
-      <View style={styles.green}>
-        {/* 
-          Get half of the screen because in the same level sum of the flex=2 and this view get 1 
-          */}
-        <View style={styles.container_green}>
-          {/* 
-            change the flex direction and the order of the blocks will become different, this is row
-            */}
-          <View style={styles.pink}></View>
-          <View style={styles.green}></View>
+          <View style={styles.pink}>
+            <Text style={styles.text_font /*give the text propety */}>
+              I am Text
+            </Text>
+            {/* this component can show the words whcih are between*/}
+          </View>
+          <View style={styles.black}>
+            <TextInput
+              style={styles.input}
+              placeholder="type word" //the default text will show
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -39,30 +32,35 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  text_font: {
+    color: "red", //change the color of text
+    textAlign: "center", //set the position of the text
+    fontSize: 20, //set the size of the text
+  },
   container: {
     flex: 1,
     justifyContent: "center",
   },
   black: {
     flex: 1,
-    backgroundColor: "black", //change the color of the View to make the result of flex more visible
-  },
-  green: {
-    flex: 1,
-    backgroundColor: "green", // beside the name of the color you can also use color code 	#008000
+    justifyContent: "center", // move the component to center
+    backgroundColor: "white", //change the color of the View to make the result of flex more visible
   },
   pink: {
     flex: 1,
-    backgroundColor: "pink", //change the color of the View to make the result of flex more visible
+    justifyContent: "center",// move the component to center
+    backgroundColor: "pink", // change the color of the View to make the result of flex more visible
   },
   container_black: {
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
   },
-  container_green: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
+  input: {
+    height: 40,
+    margin:50, // change the witdh of the margin 
+    borderColor:'red', //change the border's color
+    borderWidth: 1,// change the witdh of the border
+    padding: 10, //add so space around the component
   },
 });
