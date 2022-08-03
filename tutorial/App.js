@@ -10,23 +10,41 @@ import {
 } from "react-native"; //before using the components make sure to import them
 
 export default function App() {
-  const [text, SetText] = useState("I am text"); // define a variable which is "I am text" as default and can chage the value though using the function SetText
+  
   return (
     <View style={styles.container}>
       <View style={styles.black}>
         <View style={styles.container_black}>
           <View style={styles.pink}>
-            <Text style={styles.text_font /*give the text propety */}>
-              {text}
-            </Text>
-            {/* this component can show the words whcih are between*/}
+            <Image
+              source={require("./assets/dog.jpg")} //to show the address of your pitures
+              style={{ flex: 1}} //can controll the style of this conponent
+              resizeMode="contain" // simple options to insert picture  
+              
+            />
+            {/* this component can show the picture whcih are located at the address which is given to source*/}
           </View>
           <View style={styles.black}>
-            <TextInput
-              style={styles.input}
-              placeholder="type word to change text" //the default text will show
-              onChangeText={SetText} // the action when the input textinput has change
-            />
+            <ScrollView horizontal={true} style={{ flex: 1}}>
+              <Image
+                source={require("./assets/dog.jpg")} //to show the address of your pitures
+                style={{ flex: 1,height:400}}
+                resizeMode="center" // simple options to insert picture  
+                
+              />
+              <Image
+                source={require("./assets/dog.jpg")} //to show the address of your pitures
+                style={{ flex: 1,height:400}}
+                resizeMode="center" // simple options to insert picture  
+                
+              />
+              <Image
+                source={require("./assets/dog.jpg")} //to show the address of your pitures
+                style={{ flex: 1,height:400}}
+                resizeMode="center" // simple options to insert picture  
+                
+              />
+            </ScrollView>
           </View>
         </View>
       </View>
@@ -48,11 +66,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "white", //change the color of the View to make the result of flex more visible
+    alignContent:'center',
+    alignItems:'center',
   },
   pink: {
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "pink", // change the color of the View to make the result of flex more visible
+    alignContent:'center',
+    alignItems:'center',
   },
   container_black: {
     flex: 1,
