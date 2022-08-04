@@ -1,45 +1,40 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  ScrollView,
-} from "react-native"; //before using the components make sure to import them
+import { StyleSheet, Button, View, Switch, Text } from "react-native"; //before using the components make sure to import them
 
 export default function App() {
+  var [count, setCount] = useState(0); //define a timer to count the pressing time
+  var [text, setTitle] = useState("press me" + "\n" + "count:" + count); //define a text to change the press button been press
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  var [switch_text, setSwitch] = useState("I am " + isEnabled);
+  const toggleSwitch = (value) => ( //the switch press action
+    setIsEnabled(value),
+    setSwitch("I am " + value)
+  );
+  const ButtonOnPress = () => (
+    //the button press action
+    setCount(count + 1), //to assign +1 to count
+    setTitle("press me" + "\n" + "count:" + count) //to assign new text to text
+  );
   return (
     <View style={styles.container}>
       <View style={styles.black}>
         <View style={styles.container_black}>
           <View style={styles.pink}>
-            <Image
-              source={require("./assets/dog.jpg")} //to show the address of your pitures
-              style={{ height: 400, width: 400 }} //can controll the style of this conponent
-              resizeMode="contain" // simple options to insert picture
-            />
-            {/* this component can show the picture whcih are located at the address which is given to source*/}
+            <View style={{ width: 200, minheight: 50, backgroundColor: "red" }}>
+              <Button color="green" title={text} onPress={ButtonOnPress} />
+              {/* this component can be press and do the action which you get at onpress*/}
+            </View>
           </View>
-          <View style={styles.black}>
-            <ScrollView horizontal={true} style={{ flex: 1 }}>
-              <Image
-                source={require("./assets/dog.jpg")} //to show the address of your pitures
-                style={{ height: 400, width: 400 }}
-                resizeMode="contain" // simple options to insert picture
-              />
-              <Image
-                source={require("./assets/dog.jpg")} //to show the address of your pitures
-                style={{ height: 400, width: 400 }}
-                resizeMode="contain" // simple options to insert picture
-              />
-              <Image
-                source={require("./assets/dog.jpg")} //to show the address of your pitures
-                style={{ height: 400, width: 400 }}
-                resizeMode="contain" // simple options to insert picture
-              />
-            </ScrollView>
+          <View style={styles.white}>
+            <Text>{switch_text}</Text>
+            <Switch
+              onValueChange={toggleSwitch} //when the component been pressed, what action will do
+              value={isEnabled} //the value will change the appearance of this component
+              thumbColor={isEnabled ? "white" : "black"} //the color of circle in the switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }} //the color of other part in the switch
+            />
           </View>
         </View>
       </View>
@@ -64,21 +59,22 @@ const styles = StyleSheet.create({
     //alignContent:'center',
     //alignItems:'center',
   },
+  white: {
+    flex: 1,
+    justifyContent: "center", // move the component to center
+    backgroundColor: "white", //change the color of the View to make the result of flex more visible
+    //alignContent:'center',
+    alignItems: "center",
+  },
   pink: {
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "pink", // change the color of the View to make the result of flex more visible
+    alignItems: "center",
   },
   container_black: {
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-  },
-  input: {
-    height: 40,
-    margin: 50, // change the witdh of the margin
-    borderColor: "red", //change the border's color
-    borderWidth: 1, // change the witdh of the border
-    padding: 10, //add so space around the component
   },
 });
