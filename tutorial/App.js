@@ -7,10 +7,10 @@ export default function App() {
   var [text, setTitle] = useState("press me" + "\n" + "count:" + count); //define a text to change the press button been press
 
   const [isEnabled, setIsEnabled] = useState(false);
-  var [switch_text, setSwitch] = useState("I am " + isEnabled);
+  var [switch_text, setSwitch] = useState("Button disable is " + !isEnabled);
   const toggleSwitch = (value) => ( //the switch press action
     setIsEnabled(value),
-    setSwitch("I am " + value)
+    setSwitch("Button disable is " + !value)
   );
   const ButtonOnPress = () => (
     //the button press action
@@ -23,7 +23,7 @@ export default function App() {
         <View style={styles.container_black}>
           <View style={styles.pink}>
             <View style={{ width: 200, minheight: 50, backgroundColor: "red" }}>
-              <Button color="green" title={text} onPress={ButtonOnPress} />
+              <Button disabled={!isEnabled} color="green" title={text} onPress={ButtonOnPress} />
               {/* this component can be press and do the action which you get at onpress*/}
             </View>
           </View>
@@ -56,21 +56,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "white", //change the color of the View to make the result of flex more visible
-    //alignContent:'center',
-    //alignItems:'center',
   },
   white: {
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "white", //change the color of the View to make the result of flex more visible
-    //alignContent:'center',
-    alignItems: "center",
+    alignItems: "center", //  align the child in ths component to center
   },
   pink: {
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "pink", // change the color of the View to make the result of flex more visible
-    alignItems: "center",
+    alignItems: "center", // align the child in ths component to center
   },
   container_black: {
     flex: 1,
