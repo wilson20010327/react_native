@@ -1,39 +1,99 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Button, View, Switch, Text } from "react-native"; //before using the components make sure to import them
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Button,
+  Dimensions,
+} from "react-native"; //before using the components make sure to import them
+const DATA = [
+  {
+    id: 1,
+    title: "First Item",
+  },
+  {
+    id: 2,
+    title: "Second Item",
+  },
+  {
+    id: 3,
+    title: "Third Item",
+  },
+  {
+    id: 4,
+    title: "Four Item",
+  },
+  {
+    id: 5,
+    title: "Five Item",
+  },
+  {
+    id: 6,
+    title: "Six Item",
+  },
+  {
+    id: 7,
+    title: "Seven Item",
+  },
+  {
+    id: 8,
+    title: "Eight Item",
+  },
+  {
+    id: 9,
+    title: "Nine Item",
+  },
+];
+//get the window size
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function App() {
-  var [count, setCount] = useState(0); //define a timer to count the pressing time
-  var [text, setTitle] = useState("press me" + "\n" + "count:" + count); //define a text to change the press button been press
-
-  const [isEnabled, setIsEnabled] = useState(false);
-  var [switch_text, setSwitch] = useState("Button disable is " + !isEnabled);
-  const toggleSwitch = (value) => ( //the switch press action
-    setIsEnabled(value),
-    setSwitch("Button disable is " + !value)
-  );
-  const ButtonOnPress = () => (
-    //the button press action
-    setCount(count + 1), //to assign +1 to count
-    setTitle("press me" + "\n" + "count:" + count) //to assign new text to text
+  var [data, setData] = useState(DATA); // make the data flexible
+  var [isFetching, setIsFetching] = useState(false);
+  var itemOnPress = (id) => {
+    setData((prev) => {
+      return prev.filter((data) => data.id != id);
+    });
+  };
+  /* make the component has the action when the press event happened*/
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => itemOnPress(item.id)}>
+      <View style={styles.item}>
+        <Text>{item.title}</Text>
+      </View>
+    </TouchableOpacity>
   );
   return (
     <View style={styles.container}>
       <View style={styles.black}>
         <View style={styles.container_black}>
-          <View style={styles.pink}>
-            <View style={{ width: 200, minheight: 50, backgroundColor: "red" }}>
-              <Button disabled={!isEnabled} color="green" title={text} onPress={ButtonOnPress} />
-              {/* this component can be press and do the action which you get at onpress*/}
-            </View>
-          </View>
           <View style={styles.white}>
-            <Text>{switch_text}</Text>
-            <Switch
-              onValueChange={toggleSwitch} //when the component been pressed, what action will do
-              value={isEnabled} //the value will change the appearance of this component
-              thumbColor={isEnabled ? "white" : "black"} //the color of circle in the switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }} //the color of other part in the switch
+            {/*list the data which is .json like data*/}
+            <FlatList
+              data={data} //specify the data
+              renderItem={
+                renderItem
+              } /*each item in the data will be the argument of this function*/
+              onRefresh={() => {
+                //it is not necessary, can refreah when slide to the top
+                setIsFetching(true); 
+                setData(DATA);
+                setIsFetching(false);
+              }}
+              refreshing={isFetching}// it is necessary when you want to use onrefresh 
+              //keyExtractor={(item) => item.id} you can change the order of the list
+            />
+            
+            <Button
+              style={{ paddingBottom: 20 }}
+              title="refresh"
+              onPress={() => {
+                setData(DATA);
+              }}
             />
           </View>
         </View>
@@ -56,12 +116,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "white", //change the color of the View to make the result of flex more visible
+    alignItems: "center",
   },
   white: {
+    paddingTop: 50,
     flex: 1,
-    justifyContent: "center", // move the component to center
+    paddingBottom: 20,
+    //justifyContent: "center", // move the component to center
     backgroundColor: "white", //change the color of the View to make the result of flex more visible
-    alignItems: "center", //  align the child in ths component to center
+    //alignItems: "center", //  align the child in ths component to center
   },
   pink: {
     flex: 1,
@@ -73,5 +136,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+  },
+  item: {
+    backgroundColor: "orange",
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.1,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
