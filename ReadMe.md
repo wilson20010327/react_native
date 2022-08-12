@@ -1,55 +1,117 @@
 ---
-title: React Native Day 03
+title: React Native Day 04
 tags: react native
-description: Some components which can react when user press them 
+description: Some useful components (flatlist, alert, TouchableOpacity, keyboard.dismiss,TouchableWithoutFeedback) 
 ---
-# React Native 03
-## User Interface component introduction
-1. [**Button**](https://reactnative.dev/docs/button) : A basic button component that should render nicely on any platform. 
-2. [**Switch**](https://reactnative.dev/docs/switch) : Renders a boolean input.
-### Button & Switch
-In this example, the switch component will control the button can be press or not, and if the button been pressed, the title of button will show the total times you press the button
-* **Button** : Can change the argument disable to make it touchable or not, and the argument color will change different part of it according to the os(ios(text) or android(background))
-* **Switch** : Just like a simple button which have toggle style, and it will have its own value (true or false).
-* App output ![](https://i.imgur.com/IuCEQKJ.png =250x) ![](https://i.imgur.com/DKcI06H.png =250x)
-
+# React Native 04
+## Useful component & api introduction
+1. [Flatlist](https://reactnative.dev/docs/flatlist) : Just like ScrollView, but when loading the data ScrollView will load all the data of it, in compare flatlist will only load the data which it  is goring to show. 
+2. [TouchableOpacity](https://reactnative.dev/docs/touchableopacity) : A wrapper for making views respond properly to touches. 
+3. [Alert](https://reactnative.dev/docs/alert/) : Launches an alert dialog with the specified title and message.
+4. [Keyboard.dismiss](https://reactnative.dev/docs/keyboard#dismiss) : Dismisses the active keyboard and removes focus.
+5. [TouchableWithoutFeedback](https://reactnative.dev/docs/touchablewithoutfeedback)  
+## Flatlist & TouchableOpacity
+In this example there are some components (View) which are customized to button(with TouchableOpacity), when they been press they will disapear, but when you slide to the top or press the refresh button the list will be refresh.
+* Flatlist : just like a scrollview but with much more api can use, in this example I use the [onRefresh](https://reactnative.dev/docs/flatlist#onrefresh) to achieve the refreah function.
+* TouchableOpacity : package the component which you want to make it pressible.
+* App output ![](https://i.imgur.com/iwRq9de.gif =250x)
 ```jsx=
 //App.js
 import { useState } from "react";
-import { StyleSheet, Button, View, Switch, Text } from "react-native"; //before using the components make sure to import them
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Button,
+  Dimensions,
+} from "react-native"; //before using the components make sure to import them
+const DATA = [
+  {
+    id: 1,
+    title: "First Item",
+  },
+  {
+    id: 2,
+    title: "Second Item",
+  },
+  {
+    id: 3,
+    title: "Third Item",
+  },
+  {
+    id: 4,
+    title: "Four Item",
+  },
+  {
+    id: 5,
+    title: "Five Item",
+  },
+  {
+    id: 6,
+    title: "Six Item",
+  },
+  {
+    id: 7,
+    title: "Seven Item",
+  },
+  {
+    id: 8,
+    title: "Eight Item",
+  },
+  {
+    id: 9,
+    title: "Nine Item",
+  },
+];
+//get the window size
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function App() {
-  var [count, setCount] = useState(0); //define a timer to count the pressing time
-  var [text, setTitle] = useState("press me" + "\n" + "count:" + count); //define a text to change the press button been press
-
-  const [isEnabled, setIsEnabled] = useState(false);
-  var [switch_text, setSwitch] = useState("Button disable is " + !isEnabled);
-  const toggleSwitch = (value) => ( //the switch press action
-    setIsEnabled(value),
-    setSwitch("Button disable is " + !value)
-  );
-  const ButtonOnPress = () => (
-    //the button press action
-    setCount(count + 1), //to assign +1 to count
-    setTitle("press me" + "\n" + "count:" + count) //to assign new text to text
+  var [data, setData] = useState(DATA); // make the data flexible
+  var [isFetching, setIsFetching] = useState(false);
+  var itemOnPress = (id) => {
+    setData((prev) => {
+      return prev.filter((data) => data.id != id);
+    });
+  };
+  /* make the component has the action when the press event happened*/
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => itemOnPress(item.id)}>
+      <View style={styles.item}>
+        <Text>{item.title}</Text>
+      </View>
+    </TouchableOpacity>
   );
   return (
     <View style={styles.container}>
       <View style={styles.black}>
         <View style={styles.container_black}>
-          <View style={styles.pink}>
-            <View style={{ width: 200, minheight: 50, backgroundColor: "red" }}>
-              <Button disabled={!isEnabled} color="green" title={text} onPress={ButtonOnPress} />
-              {/* this component can be press and do the action which you get at onpress*/}
-            </View>
-          </View>
           <View style={styles.white}>
-            <Text>{switch_text}</Text>
-            <Switch
-              onValueChange={toggleSwitch} //when the component been pressed, what action will do
-              value={isEnabled} //the value will change the appearance of this component
-              thumbColor={isEnabled ? "white" : "black"} //the color of circle in the switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }} //the color of other part in the switch
+            {/*list the data which is .json like data*/}
+            <FlatList
+              data={data} //specify the data
+              renderItem={
+                renderItem
+              } /*each item in the data will be the argument of this function*/
+              onRefresh={() => {
+                //it is not necessary, can refreah when slide to the top
+                setIsFetching(true); 
+                setData(DATA);
+                setIsFetching(false);
+              }}
+              refreshing={isFetching}// it is necessary when you want to use onrefresh 
+              //keyExtractor={(item) => item.id} you can change the order of the list
+            />
+            
+            <Button
+              style={{ paddingBottom: 20 }}
+              title="refresh"
+              onPress={() => {
+                setData(DATA);
+              }}
             />
           </View>
         </View>
@@ -72,12 +134,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // move the component to center
     backgroundColor: "white", //change the color of the View to make the result of flex more visible
+    alignItems: "center",
   },
   white: {
+    paddingTop: 50,
     flex: 1,
-    justifyContent: "center", // move the component to center
+    paddingBottom: 20,
+    //justifyContent: "center", // move the component to center
     backgroundColor: "white", //change the color of the View to make the result of flex more visible
-    alignItems: "center", //  align the child in ths component to center
+    //alignItems: "center", //  align the child in ths component to center
   },
   pink: {
     flex: 1,
@@ -90,5 +155,15 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
   },
+  item: {
+    backgroundColor: "orange",
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.1,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
+
 ```
